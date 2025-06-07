@@ -1,0 +1,29 @@
+name: CI - Build e Testes
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'  # Ajuste conforme necessário
+
+      - name: Restaurar dependências
+        run: dotnet restore
+
+      - name: Compilar projeto
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Executar testes
+        run: dotnet test --no-build --verbosity normal
