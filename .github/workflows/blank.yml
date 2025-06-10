@@ -26,4 +26,4 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Executar testes
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test TesteCi.Tests/TesteCi.Tests.csproj --configuration Debug --verbosity normal
