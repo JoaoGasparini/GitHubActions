@@ -1,0 +1,29 @@
+name: CI - Build e Testes
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Instalar scanner do SonarQube
+        run: dotnet tool install --global dotnet-sonarscanner
+      
+      - name: Iniciar análise com Sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner begin /k:"SeuProjeto:Chave" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+      
+      - name: Buildar solução
+        run: dotnet build TesteCi.sln
+      
+      - name: Finalizar análise com Sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
